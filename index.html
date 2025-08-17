@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Monitoring System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-card">
+            <h2>HealthCare Login</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="login-btn">
+                    Login
+                </button>
+            </form>
+            <div class="divider">or continue with</div>
+            <button class="google-login">
+                <i class="fab fa-google"></i> Google
+            </button>
+            <p class="signup-text">
+                Don't have an account? <a href="#">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+        <header>
+            <span class="menu-icon" onclick="toggleMenu()"><i class="fas fa-bars"></i></span>
+            <h1 id="headerTitle">Health Monitor</h1>
+            <div id="connectionStatus" class="connection-status">
+                <i class="fas fa-circle"></i> <span>Connected</span>
+            </div>
+        </header>
+        
+        <div id="sideMenu" class="side-menu">
+            <a href="#" id="monitorBtn" class="active"><i class="fas fa-heartbeat"></i> Health Monitor</a>
+            <a href="#" id="doseBtn"><i class="fas fa-pills"></i> Dose Dial</a>
+            <a href="#" id="videoBtn"><i class="fas fa-video"></i> Video Call</a>
+            <a href="#" id="historyBtn"><i class="fas fa-history"></i> History</a>
+            <a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+        
+        <!-- Main Dashboard -->
+        <div class="content" id="mainDashboard">
+            <div class="welcome-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/3059/3059518.png" alt="Welcome">
+                <h2>Welcome to Health Monitoring</h2>
+                <p>Track your vital signs in real-time and receive automatic alerts</p>
+                <button class="monitor-btn" onclick="showSection('healthSection')">
+                    <i class="fas fa-heartbeat"></i> Start Monitoring
+                </button>
+            </div>
+        </div>
+        
+        <!-- Health Monitor Section -->
+        <div class="content" id="healthSection" style="display: none;">
+            <button class="back-btn" onclick="showSection('mainDashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            
+            <div class="health-grid">
+                <div class="health-card heart">
+                    <div class="card-icon"><i class="fas fa-heart"></i></div>
+                    <div class="card-label">Heart Rate</div>
+                    <div class="card-value" id="heartRate">--</div>
+                    <div class="card-unit">bpm</div>
+                </div>
+                
+                <div class="health-card oxygen">
+                    <div class="card-icon"><i class="fas fa-lungs"></i></div>
+                    <div class="card-label">SpO₂</div>
+                    <div class="card-value" id="spo2">--</div>
+                    <div class="card-unit">%</div>
+                </div>
+                
+                <div class="health-card pulse">
+                    <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="card-label">Pulse Rate</div>
+                    <div class="card-value" id="pulseRate">--</div>
+                    <div class="card-unit">bpm</div>
+                </div>
+                
+                <div class="health-card temp">
+                    <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
+                    <div class="card-label">Temperature</div>
+                    <div class="card-value" id="temperature">--</div>
+                    <div class="card-unit">°C</div>
+                </div>
+                
+                <div class="health-card bp">
+                    <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="card-label">Blood Pressure</div>
+                    <div class="card-value" id="bp">--</div>
+                    <div class="card-unit">mmHg</div>
+                </div>
+            </div>
+            
+            <div id="statusMsg" class="status">
+                <i class="fas fa-check-circle"></i> System Ready
+            </div>
+            
+            <div class="alert-actions">
+                <button class="alert-btn" id="smsButton" onclick="sendNotification()">
+                    <i class="fas fa-bell"></i> Send Emergency Alert
+                </button>
+                <div class="last-alert">
+                    <i class="fas fa-clock"></i> Last alert: <span id="lastAlertTime">Never</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dose Dial Section with Voice & Time, Medications, and Activity Monitoring -->
+        <div class="content" id="doseSection" style="display: none;">
+            <button class="back-btn" onclick="showSection('mainDashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            
+            <div style="display: flex; justify-content: center; margin-bottom: 20px; gap: 10px;">
+                <button class="btn-secondary" onclick="showDosePage('voiceTime')">Voice & Time</button>
+                <button class="btn-secondary" onclick="showDosePage('medications')">Medications</button>
+                <button class="btn-secondary" onclick="showDosePage('activity')">Activity Monitoring</button>
+            </div>
+            
+            <!-- Voice & Time Page -->
+            <div id="voiceTime" style="display:block;">
+                <div class="voice-card">
+                    <h2><i class="fas fa-microphone"></i> Voice Stress Detection</h2>
+                    <p>Click start and speak to test stress level detection.</p>
+                    <div class="voice-controls">
+                        <button class="btn-primary" onclick="startListening()"><i class="fas fa-microphone"></i> Start Listening</button>
+                        <button class="btn-danger" onclick="stopListening()"><i class="fas fa-stop"></i> Stop</button>
+                    </div>
+                    
+                    <h3>Status:</h3>
+                    <div id="voiceStatus" class="voice-status idle">Idle</div>
+                    
+                    <h3>Transcript:</h3>
+                    <div id="transcript" class="log-container">No speech yet.</div>
+                    
+                    <h3>Result:</h3>
+                    <div id="voiceResult" class="log-container">No analysis yet.</div>
+                    
+                    <h3>Caregiver Alerts:</h3>
+                    <div id="voiceAlerts" class="log-container">No alerts.</div>
+                </div>
+
+                <div class="time-card">
+                    <h2><i class="fas fa-clock"></i> Time Mode Detection</h2>
+                    <p>Automatically switches between Night Mode and Day Mode based on your current time.</p>
+                    <div id="modeBox" class="mode-box">Checking time...</div>
+                    <button class="btn-secondary" onclick="showTimeDialog()"><i class="fas fa-info-circle"></i> Check Current Time</button>
+                </div>
+            </div>
+            
+            <!-- Medications Page -->
+            <div id="medications" style="display:none;">
+                <div class="medication-card">
+                    <h2><i class="fas fa-plus-circle"></i> Add Medicine</h2>
+                    <form id="medForm" class="medication-form">
+                        <input type="text" id="medName" placeholder="Medicine Name" required>
+                        <input type="text" id="dose" placeholder="Dose (e.g. 500mg)">
+                        <input type="text" id="notes" placeholder="Special Instructions">
+                        
+                        <div class="time-inputs">
+                            <input type="time" id="time1" required>
+                            <input type="time" id="time2">
+                            <input type="time" id="time3">
+                            <input type="time" id="time4">
+                        </div>
+                        
+                        <div>
+                            <button type="submit"><i class="fas fa-plus"></i> Add Medicine</button>
+                            <button type="button" id="btnClear"><i class="fas fa-trash"></i> Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="medication-card">
+                    <h2><i class="fas fa-list"></i> Medicine List</h2>
+                    <div id="medList" class="medicine-list">
+                        <div id="emptyList" style="color: #999; text-align: center; padding: 20px;">No medicines added yet.</div>
+                    </div>
+                </div>
+                
+                <div class="medication-card">
+                    <h2><i class="fas fa-calendar-day"></i> Today's Schedule</h2>
+                    <div id="todaySchedule" class="medicine-list">
+                        <div id="emptySchedule" style="color: #999; text-align: center; padding: 20px;">No doses scheduled.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Activity Monitoring Page -->
+            <div id="activity" style="display:none;">
+                <div class="activity-card">
+                    <h2><i class="fas fa-running"></i> Elder Activity Monitoring</h2>
+                    <div id="healthData" class="activity-stats">Steps: 0 | Heartbeat: 0 bpm</div>
+                    <div id="storyOutput" class="activity-story">Loading activity data...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Video Call System Section -->
+        <div class="content" id="videoSection" style="display: none;">
+            <button class="back-btn" onclick="showSection('mainDashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            
+            <div class="video-section">
+                <h2><i class="fas fa-video"></i> Video Call System</h2>
+                
+                <div class="video-controls">
+                    <button class="btn-primary" id="startButton">
+                        <i class="fas fa-video"></i> Start Call
+                    </button>
+                    <button class="btn-danger" id="endButton" disabled>
+                        <i class="fas fa-stop"></i> End Call
+                    </button>
+                </div>
+                
+                <div class="video-container">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <video id="remoteVideo" autoplay playsinline></video>
+                </div>
+                
+                <div class="connection-settings">
+                    <h3><i class="fas fa-cog"></i> Connection Settings</h3>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="targetUserId" placeholder="Enter target user ID" class="form-control">
+                        <button class="btn-secondary" id="connectButton">
+                            <i class="fas fa-link"></i> Connect
+                        </button>
+                    </div>
+                    <div class="connection-info">
+                        <p>Your User ID: <strong id="currentUserId" class="user-id-display"></strong></p>
+                        <p>Connection Status: <strong id="connectionState">Disconnected</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- History Section -->
+        <div class="content" id="historySection" style="display: none;">
+            <button class="back-btn" onclick="showSection('mainDashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            
+            <h2><i class="fas fa-history"></i> Patient History</h2>
+            
+            <div class="history-item">
+                <h3>Today - <span id="currentDate"></span></h3>
+                <p id="todayReadings">Loading today's readings...</p>
+            </div>
+            
+            <div class="history-item">
+                <h3>Yesterday</h3>
+                <p>SpO₂: 97% | Pulse: 65 bpm | Temp: 36.6°C | BP: 99/78 mmHg</p>
+            </div>
+            
+            <div class="history-item">
+                <h3>Last Week</h3>
+                <p>SpO₂: 96% | Pulse: 68 bpm | Temp: 36.8°C | BP: 100/80 mmHg</p>
+            </div>
+        </div>
+        
+        <!-- Settings Section -->
+        <div class="content" id="settingsSection" style="display: none;">
+            <button class="back-btn" onclick="showSection('mainDashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+            
+            <h2><i class="fas fa-cog"></i> Settings</h2>
+            
+            <div class="settings-form">
+                <div class="form-group">
+                    <label for="emailNotification">Email Notifications</label>
+                    <select id="emailNotification">
+                        <option value="enabled">Enabled</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="smsNotification">SMS Notifications</label>
+                    <select id="smsNotification">
+                        <option value="enabled">Enabled</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="alertFrequency">Alert Frequency (minutes)</label>
+                    <input type="number" id="alertFrequency" value="3" min="1" max="10">
+                </div>
+                
+                <div class="form-group">
+                    <label for="emergencyContact">Emergency Contact Email</label>
+                    <input type="email" id="emergencyContact" placeholder="contact@example.com">
+                </div>
+                
+                <button class="save-btn" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
